@@ -1,0 +1,15 @@
+version: '0.1'
+
+services:
+  app:
+    build: .
+    container_name: salary-hero-app
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    env_file:
+      - .env
+    command: sh -c "npm install && npx prisma migrate dev && npm run dev"
