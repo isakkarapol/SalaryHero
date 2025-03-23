@@ -1,4 +1,7 @@
+// src/index.ts
+
 import express from 'express';
+import employeeRoutes from './routes/employees';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -12,3 +15,5 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);
 });
+
+app.use('/employees', employeeRoutes);
