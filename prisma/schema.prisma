@@ -12,3 +12,121 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum WeeklyOffType {
+  company
+  employee
+}
+
+enum AbsenceType {
+  sick
+  personal
+  vacation
+  no_show
+  other
+}
+
+enum SalaryType {
+  monthly
+  daily
+}
+
+model Company {
+  id              Int           @id @default(autoincrement())
+  name            String
+  weekly_off_type WeeklyOffType @default(company)
+  created_at      DateTime      @default(now())
+  updated_at      DateTime      @updatedAt
+
+  pay_schedules        PaySchedule[]
+  employees            Employee[]
+  weekly_offs          CompanyWeeklyOff[]
+  holidays             Holiday[]
+  absences             Absence[]
+  employee_weekly_offs EmployeeWeeklyOff[]
+}
+
+model PaySchedule {
+  id            Int      @id @default(autoincrement())
+  company       Company  @relation(fields: [company_id], references: [id])
+  company_id    Int
+  pay_day       Int
+  check_holiday Boolean  @default(true)
+  pay_name      String?
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+}
+
+model Employee {
+  id            Int        @id @default(autoincrement())
+  company       Company    @relation(fields: [company_id], references: [id])
+  company_id    Int
+  employee_code String
+  name          String
+  email         String?
+  phone_number  String?
+  salary_type   SalaryType
+  salary_amount Decimal    @default(0)
+  start_date    DateTime
+  created_at    DateTime   @default(now())
+  updated_at    DateTime   @updatedAt
+
+  absences    Absence[]
+  weekly_offs EmployeeWeeklyOff[]
+
+  @@unique([company_id, employee_code])
+}
+
+model CompanyWeeklyOff {
+  id          Int      @id @default(autoincrement())
+  company     Company  @relation(fields: [company_id], references: [id])
+  company_id  Int
+  day_of_week Int
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  @@unique([company_id, day_of_week])
+}
+
+model EmployeeWeeklyOff {
+  id            Int      @id @default(autoincrement())
+  employee      Employee @relation(fields: [employee_id], references: [id])
+  employee_id   Int
+  company       Company  @relation(fields: [company_id], references: [id])
+  company_id    Int
+  employee_code String
+  day_of_week   Int
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  @@unique([company_id, employee_code, day_of_week])
+}
+
+model Holiday {
+  id           Int      @id @default(autoincrement())
+  company      Company  @relation(fields: [company_id], references: [id])
+  company_id   Int
+  holiday_date DateTime
+  name         String?
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  @@unique([company_id, holiday_date])
+}
+
+model Absence {
+  id            Int         @id @default(autoincrement())
+  employee      Employee    @relation(fields: [employee_id], references: [id])
+  employee_id   Int
+  company       Company     @relation(fields: [company_id], references: [id])
+  company_id    Int
+  employee_code String
+  absent_date   DateTime
+  absence_type  AbsenceType
+  is_paid       Boolean     @default(false)
+  remark        String?
+  created_at    DateTime    @default(now())
+  updated_at    DateTime    @updatedAt
+
+  @@unique([company_id, employee_code, absent_date])
+}
