@@ -7,10 +7,11 @@
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
+    "start:worker": "dotenv -e .env.worker -- tsx src/workers/balance.worker.ts",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "format": "prettier --write .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -25,18 +26,32 @@
   "homepage": "https://github.com/isakkarapol/SalaryHero#readme",
   "dependencies": {
     "@prisma/client": "^6.5.0",
+    "@temporalio/worker": "^1.11.7",
+    "@types/node-cron": "^3.0.11",
+    "axios": "^1.8.4",
+    "dayjs": "^1.11.13",
+    "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "typescript": "^5.8.2"
+    "node-cron": "^3.0.3",
+    "typescript": "^5.8.2",
+    "uuid": "^11.1.0",
+    "winston": "^3.17.0",
+    "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.23.0",
     "@types/express": "^5.0.1",
+    "@types/jest": "^29.5.14",
+    "dotenv-cli": "^8.0.0",
     "eslint": "^9.23.0",
     "eslint-config-prettier": "^10.1.1",
     "eslint-plugin-prettier": "^5.2.3",
+    "jest": "^29.7.0",
     "prettier": "^3.5.3",
     "prisma": "^6.5.0",
+    "ts-jest": "^29.3.0",
     "ts-node-dev": "^2.0.0",
+    "tsx": "^4.19.3",
     "typescript-eslint": "^8.27.0"
   }
 }

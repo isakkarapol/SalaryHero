@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Balance" ADD COLUMN     "balance" DECIMAL(65,30) NOT NULL DEFAULT 0,
+ADD COLUMN     "borrowed" DECIMAL(65,30) NOT NULL DEFAULT 0;
